@@ -30,6 +30,31 @@ module.exports = (on, config) => {
 }
 ```
 
+Or if you are using Typescript add this to `cypress/plugins/global.d.ts`
+```ts
+// cypress/plugins/global.d.ts
+declare module '@cypress/code-coverage/task' {
+  export default function codeCoverageTask(
+    on: Cypress.PluginEvents, 
+    config: Cypress.PluginConfigOptions
+  ): void;
+}
+```
+
+and this to `cypress/plugins/index.ts`
+```ts
+// cypress/plugins/index.ts
+import codecov from '@cypress/code-coverage/task';
+
+export default function plugins(
+  on: Cypress.PluginEvents, 
+  config: Cypress.PluginConfigOptions
+): Cypress.ConfigOptions {
+  codeCoverageTask(on, config);
+  return config;
+}
+```
+
 ## Instrument your application
 
 This plugin **DOES NOT** instrument your code. You have to instrument it yourself using [Istanbul.js](https://istanbul.js.org/) tool. Luckily it is not difficult. For example, if you are already using Babel to transpile you can add [babel-plugin-istanbul](https://github.com/istanbuljs/babel-plugin-istanbul) to your `.babelrc` and instrument on the fly.
